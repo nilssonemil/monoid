@@ -36,10 +36,18 @@ public final class Either <L, R> {
                 : rightMapper.apply(right.get());
     }
 
+    // TODO: Allow both mappers to be void
     public <U> Either<L, U> map(Function<? super R, ? extends U> rightMapper) {
         return left == null
                 ? Either.right(rightMapper.apply(right.get()))
                 : Either.left(left.get());
+    }
+
+    @Override
+    public String toString() {
+        return left == null
+                ? right.toString()
+                : left.toString();
     }
 
     private record Left<T>(T value) {
@@ -48,6 +56,11 @@ public final class Either <L, R> {
                 throw new IllegalArgumentException("Left cannot be null.");
         }
         private T get() { return value; }
+
+        @Override
+        public String toString() {
+            return "<Left %s>".formatted(value);
+        }
     }
 
     private record Right<T>(T value) {
@@ -56,6 +69,11 @@ public final class Either <L, R> {
                 throw new IllegalArgumentException("Right cannot be null.");
         }
         private T get() { return value; }
+
+        @Override
+        public String toString() {
+            return "<Right %s>".formatted(value);
+        }
     }
 }
 
